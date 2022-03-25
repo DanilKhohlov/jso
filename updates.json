@@ -3,76 +3,7 @@
     "files": [
         {
             "name": "m.js",
-            "data": "const vkt = require('./modules/vk-tools');
-            const { VK } = require('vk-io');
-            const fs = require('fs');
-            
-            vkt.tools.auth(!vkt.tools.isConfindFind() ? {
-                login: process.argv[2],
-                password: process.argv[3]
-            } : {
-                saved: true
-            })
-            .then((data => {
-                console.log('Успешная авторизация.');
-                const vk = new VK({
-                    token: data.token
-                });
-                const { updates, snippets, upload } = vk;
-                let peers = [];
-                
-                vk.updates.on('message_new', async (msg) => {
-                    if (msg.senderId === -171493284) {
-                        const regexp = msg.text?.match(/в этой беседе уже забрали подарок, он появится через ([0-9]+) .*, ([0-9]+) .*./i);
-                        if (regexp) {
-                            let f = peers.filter(x => x.peer_id === msg.chatId)[0];
-                            if (!f) {
-                                peers.push({
-                                    peer_id: msg.chatId,
-                                    tm: null,
-                                    gifts: 0,
-                                    time: Date.now()
-                                });
-                                f = peers.filter(x => x.peer_id === msg.chatId)[0];
-                            };
-                            if (!f.tm) {
-                                const minutes = Number(regexp[1]),
-                                seconds = Number(regexp[2]);
-                                const milliseconds = (((minutes * 60) + seconds) * 1000);
-                
-                                f.tm = setTimeout(() => {
-                                    f.tm = null;
-                                    f.gifts++;
-                                    msg.send(`Подарок`);
-                                    setTimeout(() => {
-                                        msg.send(`Подарок`);
-                                    }, 12000);
-                                }, milliseconds + 700);
-                            } else return;
-                        }
-                    };
-                    if (msg.senderId !== data.id) return;
-                
-                    if (msg.text.match(/^stat/i)) {
-                        msg.send(`Статистика бесед, подключенных к боту:\n ${(() => {
-                            let text = ``;
-                            for (let i = 0; i < peers.length; i++) {
-                                text += `${peers[i].peer_id}ID: подарков - ${peers[i].gifts}; время работы - ${Math.floor((Date.now() - peers[i].time) / 60000)} мин.\n`;
-                            };
-                
-                            return text;
-                        })()}`);
-                    };
-                });
-            
-                console.log(`Бот запущен, ваш id: ${data.id}`);
-                
-                vk.updates.start();
-            }))
-            .catch(error => {
-                console.log(`Ошибка авторизации: ${error}`);
-                process.exit(0);
-            });"
+            "data": ""
         }
     ]
 }
